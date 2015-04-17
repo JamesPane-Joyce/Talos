@@ -1,6 +1,5 @@
 import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), "../", "DCEC_Library_v2"))
-import utility
+sys.path.append(os.path.join(os.path.dirname(__file__), "../", "DCEC_Library"))
 import cleaning
 import string
 from DCECContainer import DCECContainer
@@ -60,7 +59,7 @@ def findSubTokens(statement,transformDict,sorts,quants,quantMap):
 		if temp[index] == "(":
 			level += 1
 			if(level == 1):
-				sublevel.append([index,utility.getMatchingCloseParen(temp,index)+1])
+				sublevel.append([index,cleaning.getMatchingCloseParen(temp,index)+1])
 			continue
 		if temp[index] == ')':
 			level -= 1

@@ -1,7 +1,5 @@
 import sys, os
 from outputParser import toSNotation
-sys.path.append(os.path.join(os.path.dirname(__file__), '../', 'DCEC_Library'))
-import dcecStatement
 
 class proofTree():
     simultaneous=dict([

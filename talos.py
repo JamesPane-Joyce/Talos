@@ -4,7 +4,7 @@ import sys, os
 from proofTree import proofTree
 from outputParser import toSNotation
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '../', 'DCEC_Library_v2'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../', 'DCEC_Library'))
 from DCEC_Library.DCECContainer import DCECContainer
 
 
