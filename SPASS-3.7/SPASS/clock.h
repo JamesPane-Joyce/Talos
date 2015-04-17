@@ -40,7 +40,7 @@
 #ifndef _CLOCK_
 #define _CLOCK_
 
-#include "gettimeofday.h"
+//#include "gettimeofday.h"
 #include "misc.h"
 #include <sys/types.h>
 #include <sys/time.h>

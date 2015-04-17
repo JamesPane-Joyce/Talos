@@ -3,13 +3,12 @@ from sets import Set
 import sys, os
 from proofTree import proofTree
 from outputParser import toSNotation
-
 sys.path.append(os.path.join(os.path.dirname(__file__), '../', 'DCEC_Library'))
 from DCEC_Library.DCECContainer import DCECContainer
 
 
 class spassContainer():
-    directory = os.getcwd() + "/Prover_v2/"
+    directory = os.path.dirname(__file__)
     DCECVersion = ""
     input = ""
     errors = ""
@@ -206,7 +205,7 @@ class spassContainer():
         self.output = ""
         self.rulesresult = None
         self.rules = []
-        command = [self.directory + "SPASS-3.7/SPASS/SPASS", "-TimeLimit=" + str(timelimit), "-Stdin"]
+        command = [self.directory + "/SPASS-3.7/SPASS/SPASS", "-TimeLimit=" + str(timelimit), "-Stdin"]
         command += options.split(" ")
         if justify:
             command.append("-DocProof")
