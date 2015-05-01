@@ -16,17 +16,22 @@ def nextQuant(prev):
 		newmult = prevmult
 	return newquant+str(newmult)
 
-def storeQuant(quants,binding,transformDict,quantMap):
-	if len(quants) == 0:
-		quantifier = 'a0'
-	else:
-		quantifier = nextQuant(quants[-1])
+def overwriteQuant(quants,binding,sort,quantMap):
+	for thing in enumerate(quants):
+		if thing[1] == quantMap[binding]:
+			quants[thing[0]-1] =  sort
+
+def storeQuant(quants,binding,sort,transformDict,quantMap):
+	if not "TEMP" in quantMap.keys():
+		quantMap["TEMP"] = 'a0'
+	quantifier = nextQuant(quantMap["TEMP"])
 	while(quantifier in transformDict.keys()):
 		quantifier = nextQuant(quantifier)
 	quantMap[binding] = quantifier
 	quantMap[quantifier] = binding
-	quants.append("Boolean")
+	quants.append(sort)
 	quants.append(quantMap[binding])
+	quantMap["TEMP"] = quantifier
 	
 
 def funcSorts(statement,sorts):
@@ -73,14 +78,16 @@ def findSubTokens(statement,transformDict,sorts,quants,quantMap):
 	if args[0] in sorts:
 		if not args[1] == "":
 			if not args[1] in quantMap.keys() and not args[1] in transformDict.keys():
-				storeQuant(quants,args[1],transformDict,quantMap)
+				storeQuant(quants,args[1],args[0],transformDict,quantMap)
+			elif not args[1] in transformDict.keys():
+				overwriteQuant(quants,args[1],args[0],quantMap)
 	#If there is a funciton
 	else:
 		argSorts = funcSorts(args[0],sorts)
 		for sort in range(0,len(argSorts)-1):
 			if not args[1+sort] == "":
 				if not args[1+sort] in quantMap.keys() and not args[1] in transformDict.keys():
-					storeQuant(quants,1+sort,transformDict,quantMap)
+					storeQuant(quants,args[1+sort],"Boolean",transformDict,quantMap)
 	place = 0
 	#Recurse
 	for index in range(0,len(args)):
@@ -96,7 +103,7 @@ def makeFuncs(quants,statementlist,sorts,transformDict,quantMap):
 		if statementlist in transformDict.keys():
 			returnlist.append(transformDict[statementlist][0])
 		elif not statementlist in quantMap.keys():
-			storeQuant(quants,statementlist,transformDict,quantMap)
+			storeQuant(quants,statementlist,"Boolean",transformDict,quantMap)
 			returnlist.append(quantMap[statementlist])
 		else:
 			returnlist.append(quantMap[statementlist])
@@ -120,7 +127,7 @@ def makeFuncs(quants,statementlist,sorts,transformDict,quantMap):
 		elif arg[1] in quantMap.keys():
 			newlist[arg[0]] = quantMap[arg[1]]
 		else:
-			storeQuant(quants,arg[1],transformDict,quantMap)
+			storeQuant(quants,arg[1],"Boolean",transformDict,quantMap)
 			newlist[arg[0]] = quantMap[arg[1]]
 	#return the cleaned list
 	return newlist
@@ -259,7 +266,7 @@ def toSNotation(SPASSstatement,sorts,transformDict):
 		if not quants2[quant*2+1] in quants:
 			quants = quants + quants2[quant*2:quant*2+2]
 	#stringify the tokens
-	returnString = tokensToString(quants,constraints,results)	
+	returnString = tokensToString(quants,constraints,results)
 	return returnString
 
 def parseOutput(outputTree):

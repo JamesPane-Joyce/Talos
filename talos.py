@@ -29,7 +29,7 @@ class spassContainer():
         ("DCEC_RULE_12",("formula(forall([Agent(z),Agent(x),Moment(y),Boolean(w)],implies(isValid(S4AgentAgentMomentBoolean(z,x,y,w)),isValid(B3AgentMomentBoolean(x,y,B3AgentMomentBoolean(z,y,w))))),DCEC_RULE_12).",["S4AgentAgentMomentBoolean","B3AgentMomentBoolean"])),
         ("DCEC_RULE_13",("formula(forall([Agent(z),Moment(y),ActionType(x)],implies(isValid(I3AgentMomentBoolean(z,y,Happens2EventMoment(Action2AgentActionType(Self1Agent(z),x),y))),isValid(P3AgentMomentBoolean(z,y,Happens2EventMoment(Action2AgentActionType(Self1Agent(z),x),y))))),DCEC_RULE_13).",["I3AgentMomentBoolean","Happens2EventMoment","Action2AgentActionType","Self1Agent","P3AgentMomentBoolean"])),
         ("DCEC_RULE_14",("formula(forall([Agent(z),Moment(y),Boolean(x),ActionType(w)],implies(and(isValid(B3AgentMomentBoolean(z,y,x)),isValid(B3AgentMomentBoolean(z,y,O4AgentMomentBooleanBoolean(Self1Agent(z),y,x,Happens2EventMoment(Action2AgentActionType(Self1Agent(z),w),y)))),isValid(O4AgentMomentBooleanBoolean(z,y,x,Happens2EventMoment(Action2AgentActionType(Self1Agent(z),w),y)))),isValid(K3AgentMomentBoolean(z,y,I3AgentMomentBoolean(Self1Agent(z),y,Happens2EventMoment(Action2AgentActionType(Self1Agent(z),w),y)))))),DCEC_RULE_14).",["B3AgentMomentBoolean","O4AgentMomentBooleanBoolean","Happens2EventMoment","Action2AgentActionType","Self1Agent","K3AgentMomentBoolean","I3AgentMomentBoolean"])),
-        ("DCEC_RULE_15",("formula(forall([Boolean(z),Boolean(y),Agent(x),Agent(w),Boolean(v)],implies(isValid(Iff2BooleanBoolean(z,y)),isValid(Iff2BooleanBoolean(O4AgentMomentBooleanBoolean(x,w,z,v),O4AgentMomentBooleanBoolean(x,w,y,v))))),DCEC_RULE_15).",["Iff2BooleanBoolean","O4AgentMomentBooleanBoolean"])),
+        ("DCEC_RULE_15",("formula(forall([Boolean(z),Boolean(y),Agent(x),Moment(w),Boolean(v)],implies(isValid(Iff2BooleanBoolean(z,y)),isValid(Iff2BooleanBoolean(O4AgentMomentBooleanBoolean(x,w,z,v),O4AgentMomentBooleanBoolean(x,w,y,v))))),DCEC_RULE_15).",["Iff2BooleanBoolean","O4AgentMomentBooleanBoolean"])),
         ("DCEC_RULE_2",("formula(forall([Moment(z),Agent(y),Boolean(x)],isValid(C2MomentBoolean(z,Implies2BooleanBoolean(K3AgentMomentBoolean(y,z,x),B3AgentMomentBoolean(y,z,x))))),DCEC_RULE_2).",["C2MomentBoolean","Implies2BooleanBoolean","B3AgentMomentBoolean"])),
         ("DCEC_RULE_3",("formula(forall([Moment(z),Boolean(y),Agent(x),Agent(w),Agent(v)],implies(isValid(C2MomentBoolean(z,y)),isValid(K3AgentMomentBoolean(x,z,K3AgentMomentBoolean(w,z,K3AgentMomentBoolean(v,z,y)))))),DCEC_RULE_3).",["C2MomentBoolean","K3AgentMomentBoolean"])),
         ("DCEC_RULE_4",("formula(forall([Agent(z),Moment(y),Boolean(x)],implies(isValid(K3AgentMomentBoolean(z,y,x)),isValid(x))),DCEC_RULE_4).",["K3AgentMomentBoolean"])),
@@ -282,7 +282,7 @@ class spassContainer():
                     logic[index]=logic[index][logic[index].find("]")+1:]
                     tmperarotya= toSNotation(logic[index],container.namespace.sorts,self.symbolReverter)
                     if tmperarotya!="":
-                        self.discoveries.addStatement(toSNotation(logic[index],container.namespace.sorts,self.symbolReverter))
+                        self.discoveries.addStatement(tmperarotya)
                 index-=1
 
 
@@ -320,6 +320,8 @@ class spassContainer():
 
     def proofToString(self):
         output=""
+        if self.proof==None:
+            return None
         for line in self.proof.proofTree.keys():
             output += line+"\n"
             for p in self.proof.proofTree[line]:
