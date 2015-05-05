@@ -80,7 +80,7 @@ def findSubTokens(statement,transformDict,sorts,quants,quantMap):
 		for sort in range(0,len(argSorts)-1):
 			if not args[1+sort] == "":
 				if not args[1+sort] in quantMap.keys() and not args[1] in transformDict.keys():
-					storeQuant(quants,1+sort,transformDict,quantMap)
+					storeQuant(quants,args[1+sort],transformDict,quantMap)
 	place = 0
 	#Recurse
 	for index in range(0,len(args)):
@@ -275,6 +275,10 @@ if __name__ == "__main__":
 	outputContainer = DCECContainer()
 	outputContainer.namespace.addCodeSort("Boolean")
 	outputContainer.namespace.addCodeSort("Agent")
+	quant = "a0"
+	for x in range(0,1000):
+		print quant
+		quant = nextQuant(quant)
 	print toSNotation("Boolean(U) Boolean(Test2BooleanAgent(Boolean(Test1Boolean(a0)),skc0)) isValid(Test2BooleanAgent(Boolean(Test1Boolean(a0)),skc0)) Agent(skc0) isValid(U) || -> isValid(U)* -> isValid(skc0)*.",outputContainer.namespace.sorts,transformDict)
 	print toSNotation("|| -> isValid(Agent(James0))*.",outputContainer.namespace.sorts,transformDict)
 	print toSNotation("Boolean(U) isValid(V) || isValid(Test1Boolean(U)) -> isValid(U)",outputContainer.namespace.sorts,transformDict)
