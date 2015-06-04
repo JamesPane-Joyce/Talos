@@ -229,10 +229,15 @@ class spassContainer():
             newContainer = container.tokenize(statement)
             if newContainer == False:
                 raise ValueError("The query is invalid within that set of axioms.")
+            if statement==newContainer.statements[0]:
+                return "isValid("+self.convertToTerm(statement, newContainer.sortOf(statement),[])+"),"+name;
             return self.parseStatement(newContainer,newContainer.statements[0],name,vars)
         parsed = ""
         if statement.funcName == "forAll" or statement.funcName == "exists":
-            parsed += statement.funcName.lower() + "(["+container.sortOf(statement.args[0])+"("+statement.args[0] + ")]," + self.parseStatement(container,statement.args[1], "", vars + [statement.args[0]]) + ")"
+            if container.sortOf(statement.args[0]) == None:
+                parsed += statement.funcName.lower() + "(["+statement.args[0] + "]," + self.parseStatement(container,statement.args[1], "", vars + [statement.args[0]]) + ")"
+            else:
+                parsed += statement.funcName.lower() + "(["+container.sortOf(statement.args[0])+"("+statement.args[0] + ")]," + self.parseStatement(container,statement.args[1], "", vars + [statement.args[0]]) + ")"
         elif len(statement.args) == 0:
             parsed += "isValid(" + self.convertToTerm(statement.funcName,container.sortOf(statement),[]) + ")"
         else:
