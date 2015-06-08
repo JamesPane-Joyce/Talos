@@ -84,18 +84,11 @@ def findSubTokens(statement,transformDict,sorts,quants,quantMap):
 	#If there is a funciton
 	else:
 		argSorts = funcSorts(args[0],sorts)
-<<<<<<< HEAD
 		for sort in range(0,len(argSorts)):
 			if not args[sort] == "":
 				if not args[sort] in quantMap.keys() and not args[1] in transformDict.keys():
 					print args[0],args[sort],argSorts
 					storeQuant(quants,args[sort],transformDict,quantMap)
-=======
-		for sort in range(0,len(argSorts)-1):
-			if not args[1+sort] == "":
-				if not args[1+sort] in quantMap.keys() and not args[1] in transformDict.keys():
-					storeQuant(quants,args[1+sort],"Boolean",transformDict,quantMap)
->>>>>>> c2df5e6f357897f94f7e2b27bc3ce388321f7686
 	place = 0
 	#Recurse
 	for index in range(0,len(args)):
@@ -286,11 +279,7 @@ def toSNotation(SPASSstatement,sorts,transformDict):
 		if not quants2[quant*2+1] in quants:
 			quants = quants + quants2[quant*2:quant*2+2]
 	#stringify the tokens
-<<<<<<< HEAD
-	returnString = tokensToString(quants,sorts,constraints,results)	
-=======
-	returnString = tokensToString(quants,constraints,results)
->>>>>>> c2df5e6f357897f94f7e2b27bc3ce388321f7686
+	returnString = tokensToString(quants,sorts,constraints,results)
 	return returnString
 
 def parseOutput(outputTree):
