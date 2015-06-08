@@ -77,10 +77,11 @@ def findSubTokens(statement,transformDict,sorts,quants,quantMap):
 	#If there is a funciton
 	else:
 		argSorts = funcSorts(args[0],sorts)
-		for sort in range(0,len(argSorts)-1):
-			if not args[1+sort] == "":
-				if not args[1+sort] in quantMap.keys() and not args[1] in transformDict.keys():
-					storeQuant(quants,args[1+sort],transformDict,quantMap)
+		for sort in range(0,len(argSorts)):
+			if not args[sort] == "":
+				if not args[sort] in quantMap.keys() and not args[1] in transformDict.keys():
+					print args[0],args[sort],argSorts
+					storeQuant(quants,args[sort],transformDict,quantMap)
 	place = 0
 	#Recurse
 	for index in range(0,len(args)):
@@ -188,14 +189,26 @@ def tokenToString(token):
 	if(len(token) > 1):
 		returnString = "("+returnString+")"
 	return returnString
-	
-def tokensToString(quants,constraints,results):
+
+def sortQuants(quants,sorts):
+	orderedquants = []
+	for sort in sorts:
+		if sort in quants:
+			for quant in range(0,len(quants)/2):
+				index = quant*2
+				if quants[index] == sort:
+					orderedquants.append(quants[quant])
+					orderedquants.append(quants[quant+1])
+	return quants
+
+def tokensToString(quants,sorts,constraints,results):
 	returnString = ""
 	numEndParens = 0
 	#If there is nothing, just return nothing
 	if len(constraints) == 0 and len(results) == 0:
 		return returnString	
 	#Translate to DCEC-quantifiers
+	quants = sortQuants(quants,sorts)
 	for quant in range(0,len(quants)/2):
 		returnString += "(forAll ("
 		numEndParens += 1			
@@ -259,7 +272,7 @@ def toSNotation(SPASSstatement,sorts,transformDict):
 		if not quants2[quant*2+1] in quants:
 			quants = quants + quants2[quant*2:quant*2+2]
 	#stringify the tokens
-	returnString = tokensToString(quants,constraints,results)	
+	returnString = tokensToString(quants,sorts,constraints,results)	
 	return returnString
 
 def parseOutput(outputTree):
@@ -279,7 +292,7 @@ if __name__ == "__main__":
 	for x in range(0,1000):
 		print quant
 		quant = nextQuant(quant)
-	print toSNotation("Boolean(U) Boolean(Test2BooleanAgent(Boolean(Test1Boolean(a0)),skc0)) isValid(Test2BooleanAgent(Boolean(Test1Boolean(a0)),skc0)) Agent(skc0) isValid(U) || -> isValid(U)* -> isValid(skc0)*.",outputContainer.namespace.sorts,transformDict)
+	print toSNotation("Boolean(U) Agent(skc0) Boolean(Test2BooleanAgent(Boolean(Test1Boolean(a0)),skc0)) isValid(Test2BooleanAgent(Boolean(Test1Boolean(a0)),skc0)) isValid(U) || -> isValid(U)* -> isValid(U)*.",outputContainer.namespace.sorts,transformDict)
 	print toSNotation("|| -> isValid(Agent(James0))*.",outputContainer.namespace.sorts,transformDict)
 	print toSNotation("Boolean(U) isValid(V) || isValid(Test1Boolean(U)) -> isValid(U)",outputContainer.namespace.sorts,transformDict)
 	print toSNotation("Boolean(V) isValid(U) Boolean(U) || isValid(Test1Boolean(V)) -> isValid(V)",outputContainer.namespace.sorts,transformDict)
