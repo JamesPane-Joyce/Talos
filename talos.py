@@ -138,7 +138,7 @@ class spassContainer():
     def addInferenceRules(self, simultaneous, rules,container):
         necessaryFuncDefs =dict([
             ("Action2AgentActionType",("action",2,"Action",["Agent","ActionType"])),
-            ("Happens2EventMoment",("happens",2,"Boolean",["Event","Moment","Boolean"])),
+            ("Happens2EventMoment",("happens",2,"Boolean",["Event","Moment"])),
             ("Self1Agent",("self",1,"Self",["Agent"])),
             ("P3AgentMomentBoolean",("P",3,"Boolean",["Agent","Moment","Boolean"])),
             ("C2MomentBoolean",("C",2,"Boolean",["Moment","Boolean"])),
