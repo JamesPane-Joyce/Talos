@@ -406,7 +406,14 @@ class spassContainer():
         return self.rules
 
     def proofToString(self):
-        return self.proof.printPrettyProof()
+        output=""
+        if self.proof==None:
+            return None
+        for line in self.proof.proofDict.keys():
+            output += line+"\n"
+            for p in self.proof.proofDict[line]:
+                output += "\t"+p+"\n"
+        return output
 
     def proofToSlate(self):
         if self.proof==None:

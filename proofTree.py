@@ -1,4 +1,5 @@
 import sys, os
+import copy
 from outputParser import toSNotation
 
 class proofTree():
@@ -117,12 +118,14 @@ class proofTree():
             for p in line[1]:
                 premises.append(idLookup[p])
             self.proofDict[line[2]]=premises
+        """
         self.proofTree=self.stratify("(leads_to_conclusion )")
     #return a tuple, first index the leads to conclusion, second index is a list of reasons that are recursive
     def stratify(self,currentStr):
-        nextLayer=self.proofDict[currentStr]
+        nextLayer=copy.deepcopy(self.proofDict[currentStr])
         if nextLayer==None:
             nextLayer=[]
+        print currentStr,"  :::  ",nextLayer
         for x in range(0,len(nextLayer)):
             nextLayer[x]=self.stratify(nextLayer[x])
         return (currentStr,nextLayer)
@@ -133,3 +136,4 @@ class proofTree():
         for x in pTree[1]:
             output+=self.printPrettyProof(x,indents+"\t")
         return output
+        """
