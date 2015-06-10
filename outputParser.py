@@ -32,18 +32,6 @@ def storeQuant(quants,binding,sort,transformDict,quantMap):
 	quants.append(sort)
 	quants.append(quantMap[binding])
 	quantMap["TEMP"] = quantifier
-	
-
-def funcSorts(statement,sorts):
-	indexList = {}	
-	for sort in sorts:
-		temp = statement.find(sort)
-		if not temp == -1:
-			indexList[temp] = sort
-	returnList = []
-	for arg in sorted(indexList.keys()):
-		returnList.append(indexList[arg])
-	return returnList
 
 def cleanArg(arg,sorts):
 	newArg = arg
@@ -82,11 +70,11 @@ def findSubTokens(statement,transformDict,sorts,quants,quantMap):
             elif not args[1] in transformDict.keys():
                 overwriteQuant(quants,args[1],args[0],quantMap)
     #If there is a funciton
-    else:
-        argSorts = funcSorts(args[0],sorts)
+    elif args[0] in transformDict.keys():
+        argSorts = transformDict[args[0]][2]
         for sort in range(0,len(argSorts)):
             if not args[sort+1] == "" and not args[sort+1] in quantMap.keys() and not args[sort+1] in transformDict.keys():
-                    storeQuant(quants,args[sort+1],"UNBOUND",transformDict,quantMap)
+                    storeQuant(quants,args[sort+1],argSorts[sort],transformDict,quantMap)
     place = 0
     #Recurse
     for index in range(0,len(args)):
@@ -309,19 +297,25 @@ def parseOutput(outputTree):
 	currentStatement = toSNotation(outputTree.conclusion)
 
 if __name__ == "__main__":
-	transformDict = {}
-	transformDict["Test2BooleanAgent"] = ["Test"]
-	transformDict["Test1Boolean"] = ["Test"]
-	transformDict["a0"] = ["a"]
-	transformDict["James0"] = ["james"]
-	outputContainer = DCECContainer()
-	outputContainer.namespace.addCodeSort("Boolean")
-	outputContainer.namespace.addCodeSort("Agent")
-	quant = "a0"
-	for x in range(0,1000):
-		print quant
-		quant = nextQuant(quant)
-	print toSNotation("Agent(skc0) Boolean(U) Boolean(Test2BooleanAgent(Boolean(Test1Boolean(a0)),skc0)) isValid(Test2BooleanAgent(Boolean(Test1Boolean(a0)),skc0)) isValid(U)|| -> isValid(U)* -> isValid(U)*.",outputContainer.namespace.sorts,transformDict)
-	print toSNotation("|| -> isValid(Agent(James0))*.",outputContainer.namespace.sorts,transformDict)
-	print toSNotation("Boolean(U) isValid(V) || isValid(Test1Boolean(U)) -> isValid(U)",outputContainer.namespace.sorts,transformDict)
-	print toSNotation("Boolean(V) isValid(U) Boolean(U) || isValid(Test1Boolean(V)) -> isValid(V)",outputContainer.namespace.sorts,transformDict)
+    transformDict = {}
+    transformDict["Test2BooleanAgent"] = ["Test",2,["Boolean","Agent"]]
+    transformDict["Test1Boolean"] = ["Test",1,["Boolean"]]
+    transformDict["Action2AgentActionType"] = ["Action",2,["Agent","ActionType"]]
+    transformDict["a0"] = ["a"]
+    transformDict["James0"] = ["james"]
+    outputContainer = DCECContainer()
+    outputContainer.namespace.addCodeSort("Boolean")
+    outputContainer.namespace.addCodeSort("Agent")
+    outputContainer.namespace.addCodeSort("Action")
+    outputContainer.namespace.addCodeSort("ActionType")
+    quant = "a0"
+    for x in range(0,1000):
+        print quant
+        quant = nextQuant(quant)
+    print toSNotation("Agent(skc0) Boolean(U) Boolean(Test2BooleanAgent(Boolean(Test1Boolean(a0)),skc0)) isValid(Test2BooleanAgent(Boolean(Test1Boolean(a0)),skc0)) isValid(U)|| -> isValid(U)* -> isValid(U)*.",outputContainer.namespace.sorts,transformDict)
+    print toSNotation("|| -> isValid(Agent(James0))*.",outputContainer.namespace.sorts,transformDict)
+    print toSNotation("Boolean(U) isValid(V) || isValid(Test1Boolean(U)) -> isValid(U)",outputContainer.namespace.sorts,transformDict)
+    print toSNotation("Boolean(V) isValid(U) Boolean(U) || isValid(Test1Boolean(V)) -> isValid(V)",outputContainer.namespace.sorts,transformDict)
+    print toSNotation("|| -> .",outputContainer.namespace.sorts,transformDict)
+    print toSNotation("|| -> Action(Action2AgentActionType(U,V))*.",outputContainer.namespace.sorts,transformDict)
+    print toSNotation("|| -> Action(Action2AgentActionType(U,V))*.",outputContainer.namespace.sorts,transformDict)
