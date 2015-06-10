@@ -78,6 +78,8 @@ class spassContainer():
         ("DEFINITION_OF_XOR3",("formula(forall([Boolean(z),Boolean(y)],implies(isValid(Xor2BooleanBoolean(z,y)),isValid(And2BooleanBoolean(Or2BooleanBoolean(z,y),Not1Boolean(And2BooleanBoolean(z,y)))))),DEFINITION_OF_XOR).",["And2BooleanBoolean","Not1Boolean","Or2BooleanBoolean","Xor2BooleanBoolean"])),
         ("DISJUNCTIVE_SYLLOGISM",("formula(forall([Boolean(z),Boolean(y)],implies(isValid(Or2BooleanBoolean(Not1Boolean(z),y)),isValid(Implies2BooleanBoolean(z,y)))),DISJUNCTIVE_SYLLOGISM).",["Not1Boolean","Or2BooleanBoolean","Implies2BooleanBoolean"])),
         ("DISJUNCTIVE_SYLLOGISM1",("formula(forall([Boolean(z),Boolean(y)],implies(isValid(Implies2BooleanBoolean(z,y)),isValid(Or2BooleanBoolean(Not1Boolean(z),y)))),DISJUNCTIVE_SYLLOGISM).",["Not1Boolean","Or2BooleanBoolean","Implies2BooleanBoolean"])),
+        ("DISJUNCTIVE_SYLLOGISM2",("formula(forall([Boolean(z),Boolean(y)],implies(and(isValid(Not1Boolean(z)),isValid(Or2BooleanBoolean(z,y))),isValid(y))),DISJUNCTIVE_SYLLOGISM).",["Not1Boolean","Or2BooleanBoolean","Implies2BooleanBoolean"])),
+        ("DISJUNCTIVE_SYLLOGISM3",("formula(forall([Boolean(z),Boolean(y)],implies(and(isValid(Not1Boolean(y)),isValid(Or2BooleanBoolean(z,y))),isValid(z))),DISJUNCTIVE_SYLLOGISM).",["Not1Boolean","Or2BooleanBoolean","Implies2BooleanBoolean"])),
         ("CUT_ELIMINATION",("formula(forall([Boolean(z),Boolean(y),Boolean(x)],implies(isValid(And2BooleanBoolean(Implies2BooleanBoolean(z,y),Implies2BooleanBoolean(y,x))),isValid(Implies2BooleanBoolean(z,x)))),CUT_ELIMINATION).",["And2BooleanBoolean","Implies2BooleanBoolean"])),
         ("DISJUNCTION_ELIMINATION",("formula(forall([Boolean(z),Boolean(y),Boolean(x)],implies(isValid(And2BooleanBoolean(And2BooleanBoolean(Or2BooleanBoolean(z,y),Implies2BooleanBoolean(z,x)),Implies2BooleanBoolean(y,x))),isValid(x))),DISJUNCTION_ELIMINATION).",["And2BooleanBoolean","Or2BooleanBoolean","Implies2BooleanBoolean"])),
         ("DEFINITION_OF_IFF",("formula(forall([Boolean(z),Boolean(y)],implies(isValid(Iff2BooleanBoolean(z,y)),isValid(And2BooleanBoolean(And2BooleanBoolean(Implies2BooleanBoolean(z,y),Implies2BooleanBoolean(y,z)),And2BooleanBoolean(Implies2BooleanBoolean(Not1Boolean(z),Not1Boolean(y)),Implies2BooleanBoolean(Not1Boolean(y),Not1Boolean(z))))))),DEFINITION_OF_IFF).",["And2BooleanBoolean","Not1Boolean","Implies2BooleanBoolean","Iff2BooleanBoolean"])),
@@ -265,7 +267,7 @@ class spassContainer():
         findProof=True
         if discover or justify:
             for statement in container.statements:
-                if statement.createSExpression().find("exists")!=-1:
+                if not isinstance(statement,str) and statement.createSExpression().find("exists")!=-1:
                     print "DUE TO A QUIRK OF SPASS OUTPUT PROOFS AND GENERATED STATEMENTS CANNOT BE DERIVED FROM STATEMENTS WITH exists"
                     findProof=False
                     discover=False
