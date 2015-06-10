@@ -99,7 +99,7 @@ class spassContainer():
         ("CDISTRIBUTION1",("formula(forall([Moment(z),Boolean(y),Boolean(x),Boolean(w)],isValid(C2MomentBoolean(z,Implies2BooleanBoolean(And2BooleanBoolean(Or2BooleanBoolean(y,x),Or2BooleanBoolean(y,w)),Or2BooleanBoolean(y,And2BooleanBoolean(x,w)))))),CDISTRIBUTION).",["And2BooleanBoolean","Or2BooleanBoolean","C2MomentBoolean"])),
         ("CDISTRIBUTION2",("formula(forall([Moment(z),Boolean(y),Boolean(x),Boolean(w)],isValid(C2MomentBoolean(z,Implies2BooleanBoolean(And2BooleanBoolean(y,Or2BooleanBoolean(x,w)),Or2BooleanBoolean(And2BooleanBoolean(y,x),And2BooleanBoolean(y,w)))))),CDISTRIBUTION).",["And2BooleanBoolean","Or2BooleanBoolean","C2MomentBoolean"])),
         ("CDISTRIBUTION3",("formula(forall([Moment(z),Boolean(y),Boolean(x),Boolean(w)],isValid(C2MomentBoolean(z,Implies2BooleanBoolean(Or2BooleanBoolean(And2BooleanBoolean(y,x),And2BooleanBoolean(y,w)),And2BooleanBoolean(y,Or2BooleanBoolean(x,w)))))),CDISTRIBUTION).",["And2BooleanBoolean","Or2BooleanBoolean","C2MomentBoolean"])),
-        ("CCOMMUTATIVITY_OF_AND",("formula(forall([Moment(z),Boolean(y),Boolean(x)],isValid(C2MomentBoolean(z,Implies2BooleanBoolean(And2BooleanBoolean(y,x),And2BooleanBoolean(x,y)))))),CCOMMUTATIVITY_OF_AND).",["And2BooleanBoolean","C2MomentBoolean"])),
+        ("CCOMMUTATIVITY_OF_AND",("formula(forall([Moment(z),Boolean(y),Boolean(x)],isValid(C2MomentBoolean(z,Implies2BooleanBoolean(And2BooleanBoolean(y,x),And2BooleanBoolean(x,y))))),CCOMMUTATIVITY_OF_AND).",["And2BooleanBoolean","C2MomentBoolean"])),
         ("CCOMMUTATIVITY_OF_OR",("formula(forall([Moment(z),Boolean(y),Boolean(x)],isValid(C2MomentBoolean(z,Implies2BooleanBoolean(Or2BooleanBoolean(y,x),Or2BooleanBoolean(x,y))))),CCOMMUTATIVITY_OF_OR).",["Or2BooleanBoolean","C2MomentBoolean"])),
         ("CCOMMUTATIVITY_OF_XOR",("formula(forall([Moment(z),Boolean(y),Boolean(x)],isValid(C2MomentBoolean(z,Implies2BooleanBoolean(Xor2BooleanBoolean(y,x),Xor2BooleanBoolean(x,y))))),CCOMMUTATIVITY_OF_XOR).",["Xor2BooleanBoolean","C2MomentBoolean"])),
         ("CDEFINITION_OF_XOR",("formula(forall([Moment(z),Boolean(y),Boolean(x)],isValid(C2MomentBoolean(z,Implies2BooleanBoolean(Or2BooleanBoolean(And2BooleanBoolean(y,Not1Boolean(x)),And2BooleanBoolean(Not1Boolean(y),x)),Xor2BooleanBoolean(y,x))))),CDEFINITION_OF_XOR).",["And2BooleanBoolean","Not1Boolean","Or2BooleanBoolean","Xor2BooleanBoolean","C2MomentBoolean"])),
@@ -406,14 +406,7 @@ class spassContainer():
         return self.rules
 
     def proofToString(self):
-        output=""
-        if self.proof==None:
-            return None
-        for line in self.proof.proofTree.keys():
-            output += line+"\n"
-            for p in self.proof.proofTree[line]:
-                output += "\t"+p+"\n"
-        return output
+        return self.proof.printPrettyProof()
 
     def proofToSlate(self):
         if self.proof==None:
@@ -421,7 +414,7 @@ class spassContainer():
         counter=1
         numLookup=dict()
         emptySlate="(:DESCRIPTIONS(\n"
-        for statement in self.proof.proofTree.keys():
+        for statement in self.proof.proofDict.keys():
             emptySlate+='\t(:X 0 :Y 0 :ID '+str(counter)+' :NAME "" :FORMULA "'
             emptySlate+=statement+'"'
             emptySlate+=" :JUSTIFICATION LOGIC::ASSUME)\n"
@@ -432,9 +425,9 @@ class spassContainer():
             emptySlate=emptySlate.replace(" "+sort+" ",' ')
         emptySlate+="\n) :STRUCTURES ("
         counter=1
-        for statement in self.proof.proofTree.keys():
+        for statement in self.proof.proofDict.keys():
             premiseInts=[]
-            for x in self.proof.proofTree[statement]:
+            for x in self.proof.proofDict[statement]:
                 premiseInts.append(str(numLookup[x]))
             premiseInts="("+(" ".join(premiseInts))+")"
             if premiseInts=="()":

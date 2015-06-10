@@ -111,28 +111,25 @@ class proofTree():
             if not inputProof[x][0] in usedLines:
                 inputProof.pop(x)
             x-=1
-        self.proofTree=dict()
+        self.proofDict=dict()
         for line in inputProof:
             premises=[]
             for p in line[1]:
                 premises.append(idLookup[p])
-            self.proofTree[line[2]]=premises
-        """
-        #we can now look for lines based on their line number
-        self.proofTree=dict()
-        for line in inputProof:
-            premises=[]
-            for premiseId in line[1]:
-                premises.append(idLookup[premiseId.split(".")[0]])
-            premises=list(set(premises))
-            for x in range(0,len(premises)):
-        for x in self.proofTree.keys():
-            for y in range(0,len(self.proofTree[x])):
-                if self.proofTree[x][y]==x:
-                    self.proofTree[x][y]=""
-            self.proofTree[x]=[y for y in self.proofTree[x] if y]
-
-        for x in self.proofTree.keys():
-            if x=='':
-                del(self.proofTree[x])"""
-        #now we have a dictionary where every every line is associated with a list of the premises that brought it about
+            self.proofDict[line[2]]=premises
+        self.proofTree=self.stratify("(leads_to_conclusion )")
+    #return a tuple, first index the leads to conclusion, second index is a list of reasons that are recursive
+    def stratify(self,currentStr):
+        nextLayer=self.proofDict[currentStr]
+        if nextLayer==None:
+            nextLayer=[]
+        for x in range(0,len(nextLayer)):
+            nextLayer[x]=self.stratify(nextLayer[x])
+        return (currentStr,nextLayer)
+    def printPrettyProof(self,pTree=None,indents=""):
+        if pTree==None:
+            pTree=self.proofTree
+        output=indents+pTree[0]+"\n"
+        for x in pTree[1]:
+            output+=self.printPrettyProof(x,indents+"\t")
+        return output
